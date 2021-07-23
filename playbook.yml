@@ -1,0 +1,5 @@
+---
+- name: Provision base directory on server
+  hosts: server
+  roles:
+    - role: compose_dirs

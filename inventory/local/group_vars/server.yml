@@ -1,0 +1,12 @@
+---
+base_root:
+  dir: "/tmp/base_root"
+  mode: "0755"
+
+html_dir:
+  source: "./index.html"
+  dest: "/var/www/html"
+  mode: "0555"
+
+http_host:
+  ubuntu: "http://192.168.1.180"
