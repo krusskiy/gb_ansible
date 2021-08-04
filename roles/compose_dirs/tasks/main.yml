@@ -1,0 +1,35 @@
+---
+- name: "Create {{ base_root_dir }}"
+  file:
+    path: "{{ base_root.dir }}"
+    mode: "{{ base_root.mode }}"
+    state: directory
+
+- name: Create version file at base root dir
+  file:
+    path: "{{ base_root.dir }}/version.txt"
+    state: touch
+
+- name: Download
+  get_url:
+    url: https://cdn.kernel.org/pub/linux/kernel/v4.x/ChangeLog-4.4.44
+    dest: "{{ base_root.dir }}"
+    mode: "{{ base_root.mode }}"
+
+- name: Install Apache Web Server
+  apt: name=apache2 state=latest
+
+- name: Copy index.html to servers
+  copy: src={{ html_dir.source }} dest={{ html_dir.dest }} mode={{ html_dir.mode  }}
+
+- name: Start WebServer and make it enable on boot
+  service: name=apache2 state=started enabled=yes
+
+- name: Check if plan was applied
+  uri:
+    url: "{{ http_host.ubuntu }}"
+    method: GET
+    force_basic_auth: yes
+    validate_certs: no
+    status_code: [200]
+  register: result
